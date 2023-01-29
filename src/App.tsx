@@ -2,29 +2,29 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useMemo } from "react";
 import { Container } from "react-bootstrap";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { NewNote } from "./NewNote";
+import { NewGoal } from "./NewGoal";
 import { useLocalStorage } from "./useLocalStorage";
 import { v4 as uuidV4 } from "uuid";
-import { NoteList } from "./NoteList";
-import { NoteLayout } from "./NoteLayout";
-import { Note } from "./Note";
-import { EditNote } from "./EditNote";
+import { GoalList } from "./GoalList";
+import { GoalLayout } from "./GoalLayout";
+import { Goal } from "./Goal";
+import { EditGoal } from "./EditGoal";
 
-export type Note = {
+export type Goal = {
   id: string;
-} & NoteData;
+} & GoalData;
 
-export type NoteData = {
+export type GoalData = {
   title: string;
   markdown: string;
   tags: Tag[];
 };
 
-export type RowNote = {
+export type RowGoal = {
   id: string;
-} & RowNoteData;
+} & RowGoalData;
 
-export type RowNoteData = {
+export type RowGoalData = {
   title: string;
   markdown: string;
   tagIds: string[];
@@ -36,42 +36,42 @@ export type Tag = {
 };
 
 function App() {
-  const [notes, setNotes] = useLocalStorage<RowNote[]>("NOTES", []);
+  const [goals, setGoals] = useLocalStorage<RowGoal[]>("GOALS", []);
   const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
 
-  const notesWithTags = useMemo(() => {
-    return notes.map((note) => {
+  const goalsWithTags = useMemo(() => {
+    return goals.map((goal) => {
       return {
-        ...note,
-        tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
+        ...goal,
+        tags: tags.filter((tag) => goal.tagIds.includes(tag.id)),
       };
     });
-  }, [notes, tags]);
+  }, [goals, tags]);
 
-  function onCreateNote({ tags, ...data }: NoteData) {
-    setNotes((prevNotes) => {
+  function onCreateGoal({ tags, ...data }: GoalData) {
+    setGoals((prevGoals) => {
       return [
-        ...prevNotes,
+        ...prevGoals,
         { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) },
       ];
     });
   }
 
-  function onUpdateNote(id: string, { tags, ...data }: NoteData) {
-    setNotes((prevNotes) => {
-      return prevNotes.map((note) => {
-        if (note.id === id) {
-          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+  function onUpdateGoal(id: string, { tags, ...data }: GoalData) {
+    setGoals((prevGoals) => {
+      return prevGoals.map((goal) => {
+        if (goal.id === id) {
+          return { ...goal, ...data, tagIds: tags.map((tag) => tag.id) };
         } else {
-          return note;
+          return goal;
         }
       });
     });
   }
 
-  function onDeleteNote(id: string) {
-    setNotes((prevNotes) => {
-      return prevNotes.filter((note) => note.id !== id);
+  function onDeleteGoal(id: string) {
+    setGoals((prevGoals) => {
+      return prevGoals.filter((goal) => goal.id !== id);
     });
   }
 
@@ -103,8 +103,8 @@ function App() {
         <Route
           path="/"
           element={
-            <NoteList
-              notes={notesWithTags}
+            <GoalList
+              goals={goalsWithTags}
               availableTags={tags}
               onUpdateTag={onUpdateTag}
               onDeleteTag={onDeleteTag}
@@ -114,20 +114,20 @@ function App() {
         <Route
           path="/new"
           element={
-            <NewNote
-              onSubmit={onCreateNote}
+            <NewGoal
+              onSubmit={onCreateGoal}
               onAddTag={onAddTag}
               availableTags={tags}
             />
           }
         />
-        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note onDelete={onDeleteNote} />} />
+        <Route path="/:id" element={<GoalLayout goals={goalsWithTags} />}>
+          <Route index element={<Goal onDelete={onDeleteGoal} />} />
           <Route
             path="edit"
             element={
-              <EditNote
-                onSubmit={onUpdateNote}
+              <EditGoal
+                onSubmit={onUpdateGoal}
                 onAddTag={onAddTag}
                 availableTags={tags}
               />

@@ -12,17 +12,17 @@ import {
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Tag } from "./App";
-import styles from "./NoteList.module.css";
+import styles from "./GoalList.module.css";
 
-type SimplifiedNote = {
+type SimplifiedGoal = {
   tags: Tag[];
   title: string;
   id: string;
 };
 
-type NoteListProps = {
+type GoalListProps = {
   availableTags: Tag[];
-  notes: SimplifiedNote[];
+  goals: SimplifiedGoal[];
   onUpdateTag: (id: string, label: string) => void;
   onDeleteTag: (id: string) => void;
 };
@@ -35,34 +35,34 @@ type EditTagsModalProps = {
   onDeleteTag: (id: string) => void;
 };
 
-export function NoteList({
+export function GoalList({
   availableTags,
-  notes,
+  goals,
   onUpdateTag,
   onDeleteTag,
-}: NoteListProps) {
+}: GoalListProps) {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [title, setTitle] = useState("");
   const [editTagsModalIsOpen, setEditModalTagsIsOpen] = useState(false);
 
-  const filteredNotes = useMemo(() => {
-    return notes.filter((note) => {
+  const filteredGoals = useMemo(() => {
+    return goals.filter((goal) => {
       return (
         (title === "" ||
-          note.title.toLowerCase().includes(title.toLowerCase())) &&
+          goal.title.toLowerCase().includes(title.toLowerCase())) &&
         (selectedTags.length === 0 ||
           selectedTags.every((tag) =>
-            note.tags.some((noteTag) => noteTag.id === tag.id)
+            goal.tags.some((goalTag) => goalTag.id === tag.id)
           ))
       );
     });
-  }, [title, selectedTags, notes]);
+  }, [title, selectedTags, goals]);
 
   return (
     <>
       <Row className="align-items-center mb-4">
         <Col>
-          <h1>Notes</h1>
+          <h1>Goals</h1>
         </Col>
         <Col xs="auto">
           <Stack gap={2} direction="horizontal">
@@ -114,9 +114,9 @@ export function NoteList({
         </Row>
       </Form>
       <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
-        {filteredNotes.map((note) => (
-          <Col key={note.id}>
-            <NoteCard id={note.id} title={note.title} tags={note.tags} />
+        {filteredGoals.map((goal) => (
+          <Col key={goal.id}>
+            <GoalCard id={goal.id} title={goal.title} tags={goal.tags} />
           </Col>
         ))}
       </Row>
@@ -131,7 +131,7 @@ export function NoteList({
   );
 }
 
-function NoteCard({ id, title, tags }: SimplifiedNote) {
+function GoalCard({ id, title, tags }: SimplifiedGoal) {
   return (
     <Card
       as={Link}

@@ -2,23 +2,23 @@ import { FormEvent, useRef, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
-import { NoteData, Tag } from "./App";
+import { GoalData, Tag } from "./App";
 import { v4 as uuidV4 } from "uuid";
 
-type NoteFormProps = {
-  onSubmit: (data: NoteData) => void;
+type GoalFormProps = {
+  onSubmit: (data: GoalData) => void;
   onAddTag: (tag: Tag) => void;
   availableTags: Tag[];
-} & Partial<NoteData>;
+} & Partial<GoalData>;
 
-export function NoteForm({
+export function GoalForm({
   onSubmit,
   onAddTag,
   availableTags,
   title = "",
   markdown = "",
   tags = [],
-}: NoteFormProps) {
+}: GoalFormProps) {
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);

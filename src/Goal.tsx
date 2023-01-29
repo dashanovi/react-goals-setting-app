@@ -1,26 +1,26 @@
 import React from "react";
 import { Badge, Button, Col, Row, Stack } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { useNote } from "./NoteLayout";
+import { useGoal } from "./GoalLayout";
 import ReactMarkdown from "react-markdown";
 import { NoticeProps } from "react-select";
 
-type NoteProps = {
+type GoalProps = {
   onDelete: (id: string) => void;
 };
 
-export function Note({ onDelete }: NoteProps) {
-  const note = useNote();
+export function Goal({ onDelete }: GoalProps) {
+  const goal = useGoal();
   const navigate = useNavigate();
 
   return (
     <>
       <Row className="align-items-center mb-4">
         <Col>
-          <h1>{note.title}</h1>
-          {note.tags.length > 0 && (
+          <h1>{goal.title}</h1>
+          {goal.tags.length > 0 && (
             <Stack gap={1} direction="horizontal" className="flex-wrap">
-              {note.tags.map((tag) => (
+              {goal.tags.map((tag) => (
                 <Badge className="text-truncate" key={tag.id}>
                   {tag.label}
                 </Badge>
@@ -30,12 +30,12 @@ export function Note({ onDelete }: NoteProps) {
         </Col>
         <Col xs="auto">
           <Stack gap={2} direction="horizontal">
-            <Link to={`/${note.id}/edit`}>
+            <Link to={`/${goal.id}/edit`}>
               <Button variant="primary">Edit</Button>
             </Link>
             <Button
               onClick={() => {
-                onDelete(note.id);
+                onDelete(goal.id);
                 navigate("/");
               }}
               variant="outline-danger"
@@ -48,7 +48,7 @@ export function Note({ onDelete }: NoteProps) {
           </Stack>
         </Col>
       </Row>
-      <ReactMarkdown>{note.markdown}</ReactMarkdown>
+      <ReactMarkdown>{goal.markdown}</ReactMarkdown>
     </>
   );
 }
